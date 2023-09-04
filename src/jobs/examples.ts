@@ -34,10 +34,12 @@ client.defineJob({
     name: "long.running",
   }),
   run: async (payload, io, ctx) => {
-    // Perform X tasks in an iteration, each one taking 5 seconds
+    // Perform X tasks in an iteration, each one taking X milliseconds
     for (let i = 0; i < payload.iterations; i++) {
       await io.runTask(`task.${i}`, { name: `Task ${i}` }, async (task) => {
-        await new Promise((resolve) => setTimeout(resolve, 5000));
+        await new Promise((resolve) =>
+          setTimeout(resolve, payload.duration ?? 5000)
+        );
 
         return { i };
       });
